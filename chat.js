@@ -27,7 +27,7 @@
     const STORAGE_KEY_USER = 'glass_chat_username';
     const STORAGE_KEY_THEME = 'glass_chat_theme';
     const STORAGE_KEY_PROFILE = 'glass_chat_profile';
-    const WS_URL = 'ws://localhost:8080';
+    const WS_URL = 'wss://chat-server-gpz6.onrender.com';
 
     let username = localStorage.getItem(STORAGE_KEY_USER) || '';
     let currentTheme = localStorage.getItem(STORAGE_KEY_THEME) || 'dark';
