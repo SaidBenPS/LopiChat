@@ -1,0 +1,847 @@
+/* ============================================
+   CHAT ROOM — GLASS DESIGN
+   ============================================ */
+
+/* ---------- CSS Variables (Themes) ---------- */
+:root {
+    /* Dark mode (default) */
+    --bg-overlay: rgba(0, 0, 0, 0.45);
+    --glass-bg: rgba(20, 20, 30, 0.55);
+    --glass-border: rgba(255, 255, 255, 0.12);
+    --glass-shadow: rgba(0, 0, 0, 0.5);
+    --text-primary: #e8e8ec;
+    --text-secondary: #b0b0c0;
+    --msg-mine-bg: rgba(100, 140, 255, 0.35);
+    --msg-mine-border: rgba(130, 160, 255, 0.4);
+    --msg-other-bg: rgba(255, 255, 255, 0.08);
+    --msg-other-border: rgba(255, 255, 255, 0.15);
+    --input-bg: rgba(255, 255, 255, 0.07);
+    --input-border: rgba(255, 255, 255, 0.18);
+    --input-focus-border: rgba(160, 180, 255, 0.6);
+    --input-text: #e8e8ec;
+    --input-placeholder: rgba(200, 200, 220, 0.5);
+    --btn-bg: rgba(255, 255, 255, 0.1);
+    --btn-hover-bg: rgba(255, 255, 255, 0.2);
+    --btn-text: #e8e8ec;
+    --toggle-bg: rgba(255, 255, 255, 0.12);
+    --scrollbar-thumb: rgba(255, 255, 255, 0.2);
+    --scrollbar-track: transparent;
+    --accent: #8aadff;
+    --accent-soft: rgba(138, 173, 255, 0.3);
+    --divider: rgba(255, 255, 255, 0.08);
+    --header-text: #ffffff;
+    --badge-bg: rgba(255, 255, 255, 0.15);
+    --hover-row: rgba(255, 255, 255, 0.03);
+    --sidebar-bg: rgba(15, 15, 25, 0.7);
+}
+
+/* Light mode */
+[data-theme="light"] {
+    --bg-overlay: rgba(255, 255, 255, 0.3);
+    --glass-bg: rgba(255, 255, 255, 0.5);
+    --glass-border: rgba(0, 0, 0, 0.1);
+    --glass-shadow: rgba(0, 0, 0, 0.12);
+    --text-primary: #1a1a2e;
+    --text-secondary: #4a4a60;
+    --msg-mine-bg: rgba(80, 120, 240, 0.25);
+    --msg-mine-border: rgba(80, 120, 240, 0.45);
+    --msg-other-bg: rgba(0, 0, 0, 0.04);
+    --msg-other-border: rgba(0, 0, 0, 0.1);
+    --input-bg: rgba(0, 0, 0, 0.03);
+    --input-border: rgba(0, 0, 0, 0.14);
+    --input-focus-border: rgba(60, 100, 220, 0.55);
+    --input-text: #1a1a2e;
+    --input-placeholder: rgba(80, 80, 100, 0.45);
+    --btn-bg: rgba(0, 0, 0, 0.06);
+    --btn-hover-bg: rgba(0, 0, 0, 0.13);
+    --btn-text: #1a1a2e;
+    --toggle-bg: rgba(0, 0, 0, 0.08);
+    --scrollbar-thumb: rgba(0, 0, 0, 0.2);
+    --scrollbar-track: transparent;
+    --accent: #3a6af0;
+    --accent-soft: rgba(58, 106, 240, 0.2);
+    --divider: rgba(0, 0, 0, 0.07);
+    --header-text: #111122;
+    --badge-bg: rgba(0, 0, 0, 0.07);
+    --hover-row: rgba(0, 0, 0, 0.02);
+    --sidebar-bg: rgba(240, 240, 250, 0.7);
+}
+
+/* ---------- Global Reset ---------- */
+*,
+*::before,
+*::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* ---------- Body & Background ---------- */
+body {
+    font-family: 'Segoe UI', 'Inter', system-ui, -apple-system, sans-serif;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #0d0d1a url('data:image/jpeg;base64,...') center/cover no-repeat fixed;
+    padding: 16px;
+    transition: background 0.4s ease;
+    position: relative;
+}
+
+body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background: var(--bg-overlay);
+    z-index: 0;
+    pointer-events: none;
+    transition: background 0.4s ease;
+}
+
+/* ---------- App Container ---------- */
+.app-container {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    max-width: 900px;
+    height: 88vh;
+    max-height: 800px;
+    min-height: 500px;
+    display: flex;
+    gap: 12px;
+}
+
+/* ---------- Sidebar ---------- */
+.sidebar {
+    width: 260px;
+    background: var(--sidebar-bg);
+    border: 1px solid var(--glass-border);
+    border-radius: 22px;
+    backdrop-filter: blur(28px);
+    -webkit-backdrop-filter: blur(28px);
+    padding: 20px 16px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    box-shadow: 0 20px 60px var(--glass-shadow);
+    transition: all 0.4s ease;
+    flex-shrink: 0;
+}
+
+/* Profile Image */
+.profile-image-wrapper {
+    position: relative;
+    width: 90px;
+    height: 90px;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+}
+
+.profile-image-wrapper:hover {
+    transform: scale(1.05);
+}
+
+.profile-image-wrapper:hover .profile-overlay {
+    opacity: 1;
+}
+
+.profile-image {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid var(--glass-border);
+    background: var(--accent-soft);
+}
+
+.profile-overlay {
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    color: white;
+    font-size: 1.5rem;
+    pointer-events: none;
+}
+
+/* Profile Text */
+.profile-name {
+    font-weight: 700;
+    font-size: 1.1rem;
+    color: var(--header-text);
+    text-align: center;
+    letter-spacing: -0.2px;
+    transition: color 0.4s ease;
+    word-break: break-word;
+}
+
+.profile-desc {
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+    text-align: center;
+    line-height: 1.4;
+    transition: color 0.4s ease;
+    word-break: break-word;
+    max-height: 60px;
+    overflow-y: auto;
+}
+
+/* Sidebar Divider */
+.sidebar-divider {
+    width: 100%;
+    height: 1px;
+    background: var(--divider);
+    transition: background 0.4s ease;
+}
+
+/* Sidebar Buttons */
+.sidebar-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    width: 100%;
+}
+
+.sidebar-btn {
+    width: 100%;
+    padding: 10px;
+    border-radius: 14px;
+    background: var(--btn-bg);
+    border: 1px solid var(--glass-border);
+    color: var(--btn-text);
+    cursor: pointer;
+    font-size: 0.8rem;
+    font-weight: 500;
+    transition: all 0.25s ease;
+    font-family: inherit;
+    text-align: center;
+}
+
+.sidebar-btn:hover {
+    background: var(--btn-hover-bg);
+}
+
+/* ---------- Chat Wrapper ---------- */
+.chat-wrapper {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    border-radius: 22px;
+    box-shadow: 0 20px 60px var(--glass-shadow),
+                0 0 0 0.5px var(--glass-border) inset;
+    backdrop-filter: blur(28px);
+    -webkit-backdrop-filter: blur(28px);
+    overflow: hidden;
+    transition: all 0.4s ease;
+    min-width: 0;
+}
+
+/* ---------- Chat Header ---------- */
+.chat-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 18px;
+    border-bottom: 1px solid var(--divider);
+    flex-shrink: 0;
+    gap: 10px;
+    transition: border-color 0.4s ease;
+}
+
+.room-info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.room-avatar {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    background: var(--accent-soft);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    flex-shrink: 0;
+    border: 1.5px solid var(--glass-border);
+    transition: all 0.4s ease;
+}
+
+.room-name {
+    font-weight: 700;
+    font-size: 1.05rem;
+    color: var(--header-text);
+    letter-spacing: -0.2px;
+    transition: color 0.4s ease;
+}
+
+.room-status {
+    font-size: 0.72rem;
+    color: var(--text-secondary);
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    transition: color 0.4s ease;
+}
+
+.status-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: #4ade80;
+    animation: pulse-dot 2s infinite;
+    flex-shrink: 0;
+}
+
+@keyframes pulse-dot {
+    0%, 100% {
+        box-shadow: 0 0 0 0 rgba(74, 222, 128, 0.5);
+    }
+    50% {
+        box-shadow: 0 0 0 8px rgba(74, 222, 128, 0);
+    }
+}
+
+/* Theme Toggle Button */
+.theme-toggle {
+    background: var(--toggle-bg);
+    border: 1px solid var(--glass-border);
+    border-radius: 30px;
+    padding: 7px 14px;
+    cursor: pointer;
+    font-size: 0.82rem;
+    font-weight: 500;
+    letter-spacing: 0.3px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    color: var(--btn-text);
+    transition: all 0.3s ease;
+    white-space: nowrap;
+}
+
+.theme-toggle:hover {
+    background: var(--btn-hover-bg);
+}
+
+/* ---------- Messages Container ---------- */
+.messages-container {
+    flex: 1;
+    overflow-y: auto;
+    padding: 16px 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    scroll-behavior: smooth;
+}
+
+/* Scrollbar */
+.messages-container::-webkit-scrollbar {
+    width: 5px;
+}
+
+.messages-container::-webkit-scrollbar-track {
+    background: var(--scrollbar-track);
+}
+
+.messages-container::-webkit-scrollbar-thumb {
+    background: var(--scrollbar-thumb);
+    border-radius: 10px;
+}
+
+/* ---------- Message Bubbles ---------- */
+.msg-row {
+    display: flex;
+    flex-direction: column;
+    max-width: 85%;
+    animation: fadeInUp 0.3s ease;
+}
+
+.msg-row.mine {
+    align-self: flex-end;
+    align-items: flex-end;
+}
+
+.msg-row.other {
+    align-self: flex-start;
+    align-items: flex-start;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.msg-sender {
+    font-size: 0.7rem;
+    font-weight: 600;
+    color: var(--accent);
+    margin-bottom: 2px;
+    padding: 0 4px;
+    letter-spacing: 0.3px;
+    transition: color 0.4s ease;
+}
+
+.msg-bubble {
+    padding: 10px 14px;
+    border-radius: 18px;
+    word-break: break-word;
+    font-size: 0.92rem;
+    line-height: 1.4;
+    letter-spacing: -0.1px;
+    transition: all 0.4s ease;
+}
+
+.msg-row.mine .msg-bubble {
+    background: var(--msg-mine-bg);
+    border: 1px solid var(--msg-mine-border);
+    border-bottom-right-radius: 6px;
+    color: var(--text-primary);
+}
+
+.msg-row.other .msg-bubble {
+    background: var(--msg-other-bg);
+    border: 1px solid var(--msg-other-border);
+    border-bottom-left-radius: 6px;
+    color: var(--text-primary);
+}
+
+.msg-time {
+    font-size: 0.65rem;
+    color: var(--text-secondary);
+    margin-top: 3px;
+    padding: 0 4px;
+    transition: color 0.4s ease;
+}
+
+.msg-row.mine .msg-time {
+    text-align: right;
+}
+
+/* ---------- Date Divider ---------- */
+.date-divider {
+    text-align: center;
+    font-size: 0.7rem;
+    color: var(--text-secondary);
+    padding: 8px 0;
+    font-weight: 500;
+    letter-spacing: 0.4px;
+    transition: color 0.4s ease;
+}
+
+.date-divider span {
+    background: var(--glass-bg);
+    padding: 4px 14px;
+    border-radius: 20px;
+    border: 1px solid var(--glass-border);
+    transition: all 0.4s ease;
+}
+
+/* ---------- System Messages ---------- */
+.system-msg {
+    text-align: center;
+    font-size: 0.72rem;
+    color: var(--text-secondary);
+    padding: 4px 0;
+    font-style: italic;
+    transition: color 0.4s ease;
+    animation: fadeInUp 0.3s ease;
+}
+
+/* ---------- Input Area ---------- */
+.input-area {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 14px;
+    border-top: 1px solid var(--divider);
+    flex-shrink: 0;
+    transition: border-color 0.4s ease;
+}
+
+.input-area input {
+    flex: 1;
+    background: var(--input-bg);
+    border: 1.5px solid var(--input-border);
+    border-radius: 26px;
+    padding: 11px 16px;
+    font-size: 0.9rem;
+    color: var(--input-text);
+    outline: none;
+    transition: all 0.3s ease;
+    font-family: inherit;
+    letter-spacing: -0.1px;
+    min-width: 0;
+}
+
+.input-area input::placeholder {
+    color: var(--input-placeholder);
+}
+
+.input-area input:focus {
+    border-color: var(--input-focus-border);
+    box-shadow: 0 0 0 4px rgba(138, 173, 255, 0.08);
+}
+
+/* Send Button */
+.send-btn {
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    background: var(--accent-soft);
+    border: 1.5px solid var(--msg-mine-border);
+    color: var(--btn-text);
+    cursor: pointer;
+    font-size: 1.1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.25s ease;
+    flex-shrink: 0;
+}
+
+.send-btn:hover {
+    background: var(--accent);
+    color: #fff;
+    border-color: var(--accent);
+    transform: scale(1.05);
+    box-shadow: 0 6px 20px var(--accent-soft);
+}
+
+.send-btn:active {
+    transform: scale(0.94);
+}
+
+.send-btn:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+    transform: none;
+}
+
+/* ---------- Connection Status ---------- */
+.connection-status {
+    position: fixed;
+    top: 10px;
+    right: 10px;
+    z-index: 200;
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    transition: all 0.3s ease;
+    pointer-events: none;
+}
+
+.connection-status.connected {
+    background: rgba(74, 222, 128, 0.2);
+    color: #4ade80;
+    border: 1px solid rgba(74, 222, 128, 0.3);
+}
+
+.connection-status.disconnected {
+    background: rgba(255, 107, 107, 0.2);
+    color: #ff6b6b;
+    border: 1px solid rgba(255, 107, 107, 0.3);
+}
+
+.connection-status.connecting {
+    background: rgba(251, 191, 36, 0.2);
+    color: #fbbf24;
+    border: 1px solid rgba(251, 191, 36, 0.3);
+}
+
+/* ---------- Modals ---------- */
+.modal-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 100;
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+}
+
+.modal {
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    border-radius: 20px;
+    padding: 28px 24px;
+    width: 90%;
+    max-width: 400px;
+    backdrop-filter: blur(30px);
+    -webkit-backdrop-filter: blur(30px);
+    box-shadow: 0 24px 60px rgba(0, 0, 0, 0.5);
+    text-align: center;
+    transition: all 0.4s ease;
+}
+
+.modal h3 {
+    color: var(--header-text);
+    margin-bottom: 6px;
+    font-size: 1.2rem;
+    letter-spacing: -0.3px;
+    transition: color 0.4s ease;
+}
+
+.modal p {
+    color: var(--text-secondary);
+    font-size: 0.8rem;
+    margin-bottom: 16px;
+    transition: color 0.4s ease;
+}
+
+.modal input,
+.modal textarea {
+    width: 100%;
+    background: var(--input-bg);
+    border: 1.5px solid var(--input-border);
+    border-radius: 16px;
+    padding: 11px 16px;
+    font-size: 0.9rem;
+    color: var(--input-text);
+    outline: none;
+    font-family: inherit;
+    letter-spacing: -0.1px;
+    transition: all 0.3s ease;
+    margin-bottom: 10px;
+    resize: vertical;
+}
+
+.modal textarea {
+    min-height: 60px;
+    text-align: left;
+}
+
+.modal input:focus,
+.modal textarea:focus {
+    border-color: var(--input-focus-border);
+    box-shadow: 0 0 0 4px rgba(138, 173, 255, 0.08);
+}
+
+.modal input::placeholder,
+.modal textarea::placeholder {
+    color: var(--input-placeholder);
+}
+
+/* Modal Buttons */
+.modal .join-btn {
+    margin-top: 6px;
+    width: 100%;
+    padding: 11px;
+    border-radius: 26px;
+    background: var(--accent-soft);
+    border: 1.5px solid var(--msg-mine-border);
+    color: var(--btn-text);
+    cursor: pointer;
+    font-size: 0.9rem;
+    font-weight: 600;
+    font-family: inherit;
+    letter-spacing: 0.2px;
+    transition: all 0.25s ease;
+}
+
+.modal .join-btn:hover {
+    background: var(--accent);
+    color: #fff;
+    border-color: var(--accent);
+    box-shadow: 0 6px 20px var(--accent-soft);
+}
+
+.modal .cancel-btn {
+    margin-top: 8px;
+    width: 100%;
+    padding: 10px;
+    border-radius: 26px;
+    background: transparent;
+    border: 1px solid var(--glass-border);
+    color: var(--btn-text);
+    cursor: pointer;
+    font-size: 0.85rem;
+    font-family: inherit;
+    transition: all 0.25s ease;
+}
+
+.modal .cancel-btn:hover {
+    background: var(--btn-hover-bg);
+}
+
+/* ---------- Hidden File Input ---------- */
+#profileImageInput {
+    display: none;
+}
+
+/* ============================================
+   RESPONSIVE STYLES
+   ============================================ */
+
+/* Tablet & Mobile */
+@media (max-width: 768px) {
+    .app-container {
+        flex-direction: column;
+        height: 95vh;
+        max-height: none;
+        gap: 8px;
+    }
+
+    .sidebar {
+        width: 100%;
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: center;
+        padding: 12px 14px;
+        gap: 8px;
+        border-radius: 16px;
+        flex-shrink: 0;
+    }
+
+    .profile-image-wrapper {
+        width: 48px;
+        height: 48px;
+    }
+
+    .profile-name {
+        font-size: 0.9rem;
+    }
+
+    .profile-desc {
+        display: none;
+    }
+
+    .sidebar-divider {
+        display: none;
+    }
+
+    .sidebar-actions {
+        flex-direction: row;
+        gap: 4px;
+        width: auto;
+    }
+
+    .sidebar-btn {
+        font-size: 0.7rem;
+        padding: 6px 10px;
+        border-radius: 20px;
+        white-space: nowrap;
+    }
+
+    .chat-wrapper {
+        border-radius: 16px;
+        flex: 1;
+    }
+
+    .chat-header {
+        padding: 10px 12px;
+    }
+
+    .input-area {
+        padding: 8px 10px;
+        gap: 6px;
+    }
+
+    .input-area input {
+        padding: 9px 14px;
+        font-size: 0.85rem;
+    }
+
+    .send-btn {
+        width: 36px;
+        height: 36px;
+        font-size: 1rem;
+    }
+
+    .msg-bubble {
+        font-size: 0.85rem;
+        padding: 8px 12px;
+    }
+
+    .room-name {
+        font-size: 0.95rem;
+    }
+}
+
+/* Small Mobile */
+@media (max-width: 400px) {
+    body {
+        padding: 8px;
+    }
+
+    .app-container {
+        height: 98vh;
+        gap: 4px;
+    }
+
+    .sidebar {
+        padding: 8px 10px;
+        gap: 4px;
+        border-radius: 12px;
+    }
+
+    .profile-image-wrapper {
+        width: 36px;
+        height: 36px;
+    }
+
+    .profile-name {
+        font-size: 0.78rem;
+    }
+
+    .sidebar-btn {
+        font-size: 0.65rem;
+        padding: 5px 8px;
+    }
+
+    .chat-wrapper {
+        border-radius: 12px;
+    }
+
+    .chat-header {
+        padding: 8px 10px;
+    }
+
+    .input-area {
+        padding: 6px 8px;
+    }
+
+    .input-area input {
+        padding: 7px 12px;
+        font-size: 0.8rem;
+    }
+
+    .send-btn {
+        width: 32px;
+        height: 32px;
+        font-size: 0.9rem;
+    }
+
+    .msg-bubble {
+        font-size: 0.8rem;
+        padding: 6px 10px;
+    }
+}

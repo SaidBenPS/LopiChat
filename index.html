@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat Room — Glass</title>
+    <link rel="stylesheet" href="chat.css">
+</head>
+<body>
+
+    <!-- Connection status -->
+    <div class="connection-status disconnected" id="connectionStatus">⚫ جاري الاتصال...</div>
+
+    <!-- Username Modal -->
+    <div class="modal-overlay" id="usernameModal">
+        <div class="modal">
+            <h3>👋 مرحباً بك في المحادثة</h3>
+            <p>اختر اسماً للدخول إلى الغرفة</p>
+            <input type="text" id="usernameInput" placeholder="مثلاً: نورة" maxlength="24" autocomplete="off" />
+            <button class="join-btn" id="joinBtn">دخول الغرفة</button>
+        </div>
+    </div>
+
+    <!-- Profile Edit Modal -->
+    <div class="modal-overlay" id="profileModal" style="display:none;">
+        <div class="modal">
+            <h3>✏️ تعديل الملف الشخصي</h3>
+            <p>اختر صورة وعدّل اسمك ووصفك</p>
+            <input type="file" id="profileImageInput" accept="image/*" />
+            <button class="sidebar-btn" onclick="document.getElementById('profileImageInput').click()" style="margin-bottom:8px;">📷 اختر صورة</button>
+            <input type="text" id="profileNameInput" placeholder="الاسم" maxlength="24" />
+            <textarea id="profileDescInput" placeholder="اكتب وصفاً عن نفسك..." maxlength="100"></textarea>
+            <button class="join-btn" id="saveProfileBtn">حفظ التعديلات</button>
+            <button class="cancel-btn" id="cancelProfileBtn">إلغاء</button>
+        </div>
+    </div>
+
+    <!-- App Container -->
+    <div class="app-container">
+        <!-- Sidebar -->
+        <div class="sidebar" id="sidebar">
+            <div class="profile-image-wrapper" id="profileImageWrapper" title="تعديل الملف الشخصي">
+                <img class="profile-image" id="profileImage" src="" alt="Profile" />
+                <div class="profile-overlay">📷</div>
+            </div>
+            <div class="profile-name" id="profileNameDisplay">مستخدم</div>
+            <div class="profile-desc" id="profileDescDisplay">لم يضف وصفاً بعد</div>
+            <div class="sidebar-divider"></div>
+            <div class="sidebar-actions">
+                <button class="sidebar-btn" id="editProfileBtn">✏️ تعديل البروفايل</button>
+            </div>
+        </div>
+
+        <!-- Chat -->
+        <div class="chat-wrapper" id="chatWrapper">
+            <div class="chat-header">
+                <div class="room-info">
+                    <div class="room-avatar">💬</div>
+                    <div>
+                        <div class="room-name">الغرفة العامة</div>
+                        <div class="room-status">
+                            <span class="status-dot"></span> <span id="onlineCount">0</span> متصل
+                        </div>
+                    </div>
+                </div>
+                <button class="theme-toggle" id="themeToggle">
+                    <span class="icon">🌙</span> <span id="themeLabel">داكن</span>
+                </button>
+            </div>
+            <div class="messages-container" id="messagesContainer"></div>
+            <div class="input-area">
+                <input type="text" id="messageInput" placeholder="اكتب رسالة..." maxlength="500" autocomplete="off" />
+                <button class="send-btn" id="sendBtn" disabled>➤</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="chat.js"></script>
+</body>
+</html>
